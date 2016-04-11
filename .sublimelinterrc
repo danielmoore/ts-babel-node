@@ -1,0 +1,13 @@
+{
+    "linters": {
+        "typescript": {
+          "excludes": [
+              "node_modules/**",
+              "dist/**"
+          ]
+        },
+        "eslint": {
+
+        }
+    }
+}

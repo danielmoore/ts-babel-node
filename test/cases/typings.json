@@ -1,0 +1,7 @@
+{
+  "name": "Development",
+  "version": false,
+  "dependencies": {
+    "bluebird": "registry:npm/bluebird#3.3.4+20160411163813"
+  }
+}

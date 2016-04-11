@@ -1,0 +1,191 @@
+---
+env:
+  node: 2
+rules:
+  strict: 2
+  eqeqeq:
+    - 2
+    - "allow-null"
+  guard-for-in: 2
+  no-extend-native: 2
+  comma-dangle:
+    - 2
+    - "always-multiline"
+  no-use-before-define:
+    - 2
+    - "nofunc"
+  no-constant-condition: 2
+  no-debugger: 2
+  no-dupe-args: 2
+  no-dupe-keys: 2
+  no-duplicate-case: 2
+  no-empty-character-class: 2
+  no-empty: 2
+  no-ex-assign: 2
+  no-extra-boolean-cast: 2
+  no-extra-parens: 2
+  no-extra-semi: 2
+  no-func-assign: 2
+  no-inner-declarations:
+    - 2
+    - "functions"
+  no-invalid-regexp: 2
+  no-irregular-whitespace: 2
+  no-negated-in-lhs: 2
+  no-obj-calls: 2
+  no-sparse-arrays: 2
+  no-unreachable: 2
+  use-isnan: 2
+  valid-typeof: 2
+  complexity:
+    - 2
+    - 10
+  consistent-return: 2
+  no-with: 2
+  radix: 2
+  yoda:
+    - 2
+    - "never"
+  no-unused-vars: 2
+  no-undef: 2
+  max-depth:
+    - 2
+    - 5
+  max-len:
+    - 2
+    - 120
+    - 2
+    -
+      ignoreComments: true
+      ignoreUrls: true
+  max-params:
+    - 2
+    - 5
+  no-caller: 2
+  no-sequences: 2
+  no-throw-literal: 2
+  new-cap:
+    - 2
+  no-this-before-super: 2
+  no-new-object: 2
+  dot-location:
+    - 2
+    - "property"
+  dot-notation: 2
+  no-return-assign: 2
+  no-useless-call: 2
+  no-unused-expressions: 2
+  no-self-compare: 2
+  wrap-iife:
+    - 2
+    - "inside"
+  no-alert: 2
+  no-fallthrough: 2
+  eol-last: 2
+  quotes:
+    - 2
+    - "single"
+  semi:
+    - 2
+    - "always"
+  array-bracket-spacing:
+    - 2
+    - "always"
+    -
+      singleValue: true
+      objectsInArrays: true
+      arraysInArrays: true
+  brace-style:
+    - 2
+    - "1tbs"
+    -
+      allowSingleLine: true
+  camelcase:
+    - 2
+    -
+      properties: "always"
+  comma-spacing:
+    - 2
+    -
+      before: false
+      after: true
+  comma-style:
+    - 2
+    - "last"
+  computed-property-spacing:
+    - 2
+    - "never"
+  func-style:
+    - 2
+    - "declaration"
+  indent:
+    - 2
+    - 2
+    -
+      SwitchCase: 1
+  key-spacing:
+    - 2
+    -
+      beforeColon: false
+      afterColon: true
+  new-parens: 2
+  no-lonely-if: 2
+  no-multiple-empty-lines:
+    - 2
+    -
+      max: 2
+  no-mixed-spaces-and-tabs: 2
+  no-nested-ternary: 2
+  no-spaced-func: 2
+  no-trailing-spaces: 2
+  no-unneeded-ternary: 2
+  object-curly-spacing:
+    - 2
+    - "always"
+  operator-assignment:
+    - 2
+    - "always"
+  operator-linebreak:
+    - 2
+    - "before"
+  padded-blocks:
+    - 2
+    - "never"
+  quote-props:
+    - 2
+    - "as-needed"
+  semi-spacing:
+    - 2
+    -
+      before: false
+      after: true
+  space-before-blocks:
+    - 2
+    - "always"
+  space-before-function-paren:
+    - 2
+    -
+      anonymous: "always"
+      named: "never"
+  space-in-parens:
+    - 2
+    - "never"
+  space-infix-ops: 2
+  space-unary-ops:
+    - 2
+    -
+      words: true
+      nonwords: false
+  spaced-comment:
+    - 2
+    - "always"
+    -
+      markers:
+        - "*"
+  block-spacing:
+    - 2
+    - "always"
+  keyword-spacing:
+    - 2
+    - before: true
+      after: true
