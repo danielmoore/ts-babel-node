@@ -6,7 +6,6 @@ var sourceMapSupport = require('source-map-support');
 var outputs = {}; // filename => { code, map }
 
 var babelOpts = {
-  presets: [ require('babel-preset-es2015') ],
   inputSourceMap: true, // load TS source maps
   ast: false,
 };
@@ -55,6 +54,12 @@ function registerBabel() {
 exports.register = register;
 function register(opts) {
   registerBabel();
+  if (opts && opts.babel) {
+    babelOpts = Object.assign(opts.babel, babelOpts);
+    delete opts.babel;
+  } else {
+    babelOpts.presets = [ require('babel-preset-es2015') ];
+  }
   require('ts-node').register(opts);
 }
 
