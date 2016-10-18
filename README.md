@@ -1,4 +1,4 @@
-# TypeScript-Babel Node
+# TypeScript-Babel Node [![Build Status](https://travis-ci.org/danielmoore/ts-babel-node.svg?branch=master)](https://travis-ci.org/danielmoore/ts-babel-node)
 
 This package enables Babel compilation of TypeScript compilation output through a registration function and a Node binary proxy.
 
