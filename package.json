@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@types/bluebird": "^3.0.35",
+    "babel-polyfill": "^6.9.1",
     "bluebird": "^3.4.0",
     "code": "^4.0.0",
     "concat-stream": "^1.5.1",
@@ -39,7 +40,6 @@
   },
   "dependencies": {
     "babel-core": "^6.9.1",
-    "babel-polyfill": "^6.9.1",
     "babel-preset-es2015": "^6.9.0",
     "source-map-support": "^0.4.0"
   }
