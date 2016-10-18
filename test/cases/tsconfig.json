@@ -11,8 +11,5 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "isolatedModules": true
-  },
-  "files": [
-    "typings/main.d.ts"
-  ]
+  }
 }

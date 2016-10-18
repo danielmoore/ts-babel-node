@@ -2,21 +2,36 @@
 var exec = require('./exec');
 var lab = exports.lab = require('lab').script();
 var expect = require('code').expect;
+var stackParser = require('error-stack-parser');
 
 lab.experiment('When an error is thrown', function () {
-  runExperiment('synchronously', 'sync-throw.ts', 'throwError (sync-throw.ts:8:9)');
+  runExperiment('synchronously', 'sync-throw.ts', {
+    fileName: require.resolve('./cases/sync-throw.ts'),
+    functionName: 'throwError',
+    lineNumber: 8,
+    columnNumber: 9,
+  });
 
-  runExperiment('in a promise', 'promise-throw.ts', 'throwError (promise-throw.ts:16:9)');
+  runExperiment('in a promise', 'promise-throw.ts',  {
+    fileName: require.resolve('./cases/promise-throw.ts'),
+    functionName: 'throwError',
+    lineNumber: 16,
+    columnNumber: 9,
+  });
 });
 
-function runExperiment(title, file, errorLcoation) {
+function runExperiment(title, file, errorLocation) {
   lab.experiment(title, function () {
-    var result;
+    var result, frames = [];
 
     lab.before(function () {
       return exec(file)
         .then(function (_result) {
           result = _result;
+
+          if (result.out.startsWith('Error:'))
+            // fake out an Error object
+            frames = stackParser.parse({ stack: result.out });
         });
     });
 
@@ -25,9 +40,13 @@ function runExperiment(title, file, errorLcoation) {
       done();
     });
 
-    lab.test('it prints a stack trace with the correct line info', function (done) {
+    lab.test('it prints a stack trace with the correct message', function (done) {
       expect(result.out).to.startWith('Error: test error');
-      expect(result.out).to.include('\n    at ' + errorLcoation + '\n');
+      done();
+    });
+
+    lab.test('it prints a stack trace with the correct location', function (done) {
+      expect(frames[0]).to.include(errorLocation);
       done();
     });
   });
