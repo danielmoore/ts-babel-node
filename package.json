@@ -1,6 +1,6 @@
 {
   "name": "ts-babel-node",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "TypeScript + Babel execution environment and REPL for node",
   "author": "Daniel Moore <polaris@northhorizon.net>",
   "license": "MIT",
