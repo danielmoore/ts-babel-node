@@ -2,4 +2,4 @@
 'use strict';
 
 require('..').registerBabel();
-require('ts-node/dist/bin');
+require('ts-node/dist/_bin');
