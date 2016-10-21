@@ -26,6 +26,8 @@
   },
   "devDependencies": {
     "@types/bluebird": "^3.0.35",
+    "@types/node": "^6.0.45",
+    "babel-plugin-transform-remove-console": "^6.8.0",
     "babel-polyfill": "^6.9.1",
     "bluebird": "^3.4.0",
     "code": "^4.0.0",

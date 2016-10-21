@@ -34,6 +34,8 @@ $ npm install --save-dev ts-babel-node typescript@1.8
 
 Since `ts-babel-node` is a wrapper around `ts-node`, anything you can do with `ts-node` works with `ts-babel-node`. See [`ts-node`'s docs](https://github.com/TypeStrong/ts-node/#usage) for more details.
 
+To configure babel, you can pass in an options object to the appropriate register function or use a [babelrc](http://babeljs.io/docs/usage/babelrc/). All babelrc locations are supported. **Note**: if you use a babelrc, the default babel configuration provided by ts-babel-node will not be used. Simply include the `es2015` preset in your config (or don't, if you don't want it).
+
 ### Library
 
 `ts-babel-node` exposes two APIs. The first is a wrapper around the `ts-node` API.
@@ -41,7 +43,7 @@ Since `ts-babel-node` is a wrapper around `ts-node`, anything you can do with `t
 ```js
 // $ node this-file.js
 
-require('ts-babel-node').register(/* ts-node options */);
+require('ts-babel-node').register(tsNodeOpts, babelOpts); // both opts are optional
 // Or
 require('ts-babel-node/register');
 ```
@@ -57,7 +59,7 @@ The second API only adds the babel-compilation step. This is useful if your code
 ```js
 // $ ts-node this-file.js
 
-require('ts-babel-node').registerBabel();
+require('ts-babel-node').registerBabel(babelOpts); // babelOpts is optional
 // Or
 require('ts-babel-node/register-babel');
 ```
@@ -83,4 +85,4 @@ import 'ts-babel-node/register-babel';
 // ...
 ```
 
-Then use `gulp` normally. Keep in mind that the babel traspiler won't be active in your `gulpfile.ts`, but will be running in all your imports. 
+Then use `gulp` normally. Keep in mind that the babel traspiler won't be active in your `gulpfile.ts`, but will be running in all your imports.
