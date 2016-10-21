@@ -29,6 +29,7 @@
     "@types/node": "^6.0.45",
     "babel-plugin-transform-remove-console": "^6.8.0",
     "babel-polyfill": "^6.9.1",
+    "babel-preset-react": "^6.16.0",
     "bluebird": "^3.4.0",
     "code": "^4.0.0",
     "concat-stream": "^1.5.1",
