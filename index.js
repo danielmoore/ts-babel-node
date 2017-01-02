@@ -23,19 +23,21 @@ function registerBabel(babelOpts) {
 
   overrideSourceMaps();
 
-  // In case ts-node has already run...
-  var tsLoader = wrap(require.extensions['.ts'], hook);
+  [ '.ts', '.tsx' ].forEach(function (fileType) {
+    // In case ts-node has already run...
+    var tsLoader = wrap(require.extensions[fileType], hook);
 
-  Object.defineProperty(require.extensions, '.ts', {
-    enumerable: true,
+    Object.defineProperty(require.extensions, fileType, {
+      enumerable: true,
 
-    // In case ts-node hasn't run yet...
-    set: function (newTSLoader) {
-      tsLoader = wrap(newTSLoader, hook);
-    },
-    get: function () {
-      return tsLoader;
-    },
+      // In case ts-node hasn't run yet...
+      set: function (newTSLoader) {
+        tsLoader = wrap(newTSLoader, hook);
+      },
+      get: function () {
+        return tsLoader;
+      },
+    });
   });
 }
 
