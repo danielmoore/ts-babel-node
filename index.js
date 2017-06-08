@@ -54,7 +54,7 @@ function hook(base, m, filename) {
 
 function compile(base, code, filename) {
   var sourcemap = convertSourceMap.fromMapFileSource(code, '.').toObject();
-  convertSourceMap.removeMapFileComments(code);
+  code = convertSourceMap.removeMapFileComments(code);
 
   var babelOutput = babel.transform(code, getBabelOpts(filename, sourcemap));
 
@@ -114,7 +114,7 @@ function overrideSourceMaps() {
 
 function wrap(base, fn) {
   if (!(typeof base === 'function')) return base;
-  return function ()  {
+  return function () {
     var args = Array.prototype.slice.call(arguments, 0);
     args.unshift(base);
     return fn.apply(this, args);
