@@ -11,7 +11,7 @@ var outputs = {}; // filename => { code, map }
 var baseBabelOpts = { ast: false };
 
 var defaultBabelOpts = {
-  presets: [ require('babel-preset-es2015') ],
+  presets: [ require('babel-preset-env') ],
 };
 
 exports.registerBabel = registerBabel;
