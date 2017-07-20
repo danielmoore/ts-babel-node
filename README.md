@@ -86,3 +86,16 @@ import 'ts-babel-node/register-babel';
 ```
 
 Then use `gulp` normally. Keep in mind that the babel transpiler won't be active in your `gulpfile.ts`, but will be running in all your imports.
+
+### Debugging
+
+In order to debug with `ts-babel-node` you must run with one of the following options:
+
+```
+> node [debug_opts] -r ts-babel-node/register [args]
+> node [debug_opts] node_modules/.bin/ts-babel-node [args]
+
+```
+
+This is a current limitation due to this module not spawning it's own node process, so debug
+arguments aren't passed to node as execArgs, instead they're passed as normal script arguments.

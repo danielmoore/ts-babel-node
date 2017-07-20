@@ -45,6 +45,7 @@
   "dependencies": {
     "babel-core": "^6.9.1",
     "babel-preset-env": "^1.5.2",
+    "merge-source-map": "^1.0.4",
     "source-map-support": "^0.4.0"
   }
 }
