@@ -53,10 +53,20 @@ function hook(base, m, filename) {
 }
 
 function compile(base, code, filename) {
-  var sourcemap = convertSourceMap.fromMapFileSource(code, '.').toObject();
+  var sourceMapConverter = convertSourceMap.fromSource(code);
+  var originalSourceMap = null;
+
+  // older versions of ts-node use .map files rather than inline
+  if (!sourceMapConverter) {
+    sourceMapConverter = convertSourceMap.fromMapFileSource(code, '.');
+  }
+
+  if (sourceMapConverter) {
+    originalSourceMap = sourceMapConverter.toObject();
+  }
   code = convertSourceMap.removeMapFileComments(code);
 
-  var babelOutput = babel.transform(code, getBabelOpts(filename, sourcemap));
+  var babelOutput = babel.transform(code, getBabelOpts(filename, originalSourceMap));
 
   // babelOutput has a bunch of undocumented stuff on it. Just grab what we need to save memory
   outputs[filename] = { code: babelOutput.code, map: babelOutput.map };
