@@ -1,20 +1,23 @@
 'use strict';
 
+var os = require('os');
 var path = require('path');
 var babel = require('babel-core');
 var buildConfigChain = require('babel-core/lib/transformation/file/options/build-config-chain');
 var sourceMapSupport = require('source-map-support');
 var convertSourceMap = require('convert-source-map');
+var mergeSourceMap = require('merge-source-map');
 
 var outputs = {}; // filename => { code, map }
 
-var baseBabelOpts = { ast: false };
+var baseBabelOpts = { ast: false, sourceMaps: true };
 
 var defaultBabelOpts = {
   presets: [ require('babel-preset-env') ],
 };
 
 exports.registerBabel = registerBabel;
+
 function registerBabel(babelOpts) {
   if (babelOpts) {
     Object.assign(baseBabelOpts, babelOpts);
@@ -42,6 +45,7 @@ function registerBabel(babelOpts) {
 }
 
 exports.register = register;
+
 function register(tsNodeOpts, babelOpts) {
   registerBabel(babelOpts);
   require('ts-node').register(tsNodeOpts);
@@ -53,26 +57,42 @@ function hook(base, m, filename) {
 }
 
 function compile(base, code, filename) {
-  var sourcemap = convertSourceMap.fromMapFileSource(code, '.').toObject();
+  var sourceMapConverter = convertSourceMap.fromSource(code);
+  var originalSourceMap = null;
+
+  // older versions of ts-node use .map files rather than inline
+  if (!sourceMapConverter) {
+    sourceMapConverter = convertSourceMap.fromMapFileSource(code, '.');
+  }
+
+  if (sourceMapConverter) {
+    originalSourceMap = sourceMapConverter.toObject();
+  }
+
   code = convertSourceMap.removeMapFileComments(code);
 
-  var babelOutput = babel.transform(code, getBabelOpts(filename, sourcemap));
+  var babelOutput = babel.transform(code, getBabelOpts(filename));
+  var mergedSourceMap = buildSourceMap(originalSourceMap, babelOutput.map, filename);
 
   // babelOutput has a bunch of undocumented stuff on it. Just grab what we need to save memory
-  outputs[filename] = { code: babelOutput.code, map: babelOutput.map };
+  outputs[filename] = { code: babelOutput.code, map: mergedSourceMap };
 
-  return base.call(this, babelOutput.code, filename);
+  var codeWithSourceMap = attachInlineSourceMap(babelOutput.code, mergedSourceMap);
+  return base.call(this, codeWithSourceMap, filename);
 }
 
-function getBabelOpts(filename, sourcemap) {
+function getBabelOpts(filename) {
   // this function does roughly what OptionsManager.init does, but we add our own defaulting logic
 
-  var chain = buildConfigChain(Object.assign({ filename: filename, inputSourceMap: sourcemap }, baseBabelOpts));
+  var chain = buildConfigChain(Object.assign({ filename: filename }, baseBabelOpts));
 
   var optionsManager = new babel.OptionManager();
-  chain.forEach(function (c) { optionsManager.mergeOptions(c); });
+  chain.forEach(function (c) {
+    optionsManager.mergeOptions(c);
+  });
 
-  // custom defaulting logic: If the user doesn't provide a .babelrc (or equivalent), then we supply our default.
+  // custom defaulting logic: If the user doesn't provide a .babelrc (or equivalent), then we supply
+  // our default.
   if (chain.length < 2) // our base config counts as a config
     optionsManager.mergeOptions({
       options: defaultBabelOpts,
@@ -86,8 +106,47 @@ function getBabelOpts(filename, sourcemap) {
   return optionsManager.options;
 }
 
+/**
+ * Merge the original source map (from TS->JS compilation) with the babel source map. This
+ * produces a better result than using the `inputSourceMap` option in babel.
+ *
+ * @param {Object} originalSourceMap the source map associated with the original code
+ * @param {Object} compiledSourceMap the source map outputted from babel
+ * @param {String} filename the path to the original code
+ * @return {Object} Merged source map
+ */
+function buildSourceMap(originalSourceMap, compiledSourceMap, filename) {
+  var mergedMap = mergeSourceMap(originalSourceMap, compiledSourceMap);
+
+  mergedMap.sources = [ filename ];
+  // we've compile the sources so it should be a '.js' file now
+  mergedMap.file = replaceExtension(filename);
+
+  if (mergedMap.sourceRoot) {
+    delete mergedMap.sourceRoot;
+  }
+
+  return mergedMap;
+
+  function replaceExtension(str) {
+    return str.replace(/\..+$/, '.js');
+  }
+}
+
+/**
+ * Debuggers need access to the source maps to work correctly. Since we're not writing them to
+ * disk we write inline source maps to the code
+ * @param {String} code
+ * @param {Object} sourceMap
+ * @returns {String} code with inline source map as a comment
+ */
+function attachInlineSourceMap(code, sourceMap) {
+  return code + os.EOL + convertSourceMap.fromObject(sourceMap).toComment();
+}
+
 function overrideSourceMaps() {
   sourceMapSupport.install({
+    environment: 'node',
     handleUncaughtExceptions: false,
     retrieveFile: function (filename) {
       return outputs && outputs[filename] && outputs[filename].code;
@@ -109,7 +168,8 @@ function overrideSourceMaps() {
   });
 
   // Prevent ts-node from adding its own lookups.
-  sourceMapSupport.install = function () { };
+  sourceMapSupport.install = function () {
+  };
 }
 
 function wrap(base, fn) {
