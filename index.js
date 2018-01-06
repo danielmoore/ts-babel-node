@@ -53,7 +53,7 @@ function hook(base, m, filename) {
 }
 
 function compile(base, code, filename) {
-  var sourcemap = convertSourceMap.fromMapFileSource(code, '.').toObject();
+  var sourcemap = convertSourceMap.fromSource(code).toObject();
   code = convertSourceMap.removeMapFileComments(code);
 
   var babelOutput = babel.transform(code, getBabelOpts(filename, sourcemap));
